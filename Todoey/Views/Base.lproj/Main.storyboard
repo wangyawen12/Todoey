@@ -36,7 +36,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="hgu-Mh-zfo">
                             <color key="tintColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
-                                <action selector="addButtonPressed:" destination="ALV-3h-H8A" id="Uiu-J5-OVN"/>
+                                <action selector="addCategoryButton:" destination="ALV-3h-H8A" id="Cgu-k0-phh"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
