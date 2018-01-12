@@ -123,6 +123,7 @@ class TodoListViewController: UITableViewController {
                 let newItem = Item()
                 
                 newItem.title = textField.text!
+                newItem.dateCreated = Date()
                 
                 currentCategory.items.append(newItem)
             }
@@ -183,11 +184,16 @@ class TodoListViewController: UITableViewController {
 
  //Mark: - Search bar methods
 
-//extension TodoListViewController : UISearchBarDelegate{
-//
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//
-//
+extension TodoListViewController : UISearchBarDelegate{
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+
+        
+        todoItems = todoItems?.filter("title CONTAINS[cd]  %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
+        
+        tableView.reloadData()
+        
+    }
 //        let request : NSFetchRequest<Item> =  Item.fetchRequest()
 //
 //
@@ -200,35 +206,35 @@ class TodoListViewController: UITableViewController {
 //
 //
 //        loadItems(with: request,predicate: predicate)
-//
-//
-//    }
-//
-//
-//        //tableView.reloadData()
-//
-//        func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String){
-//
-//            if searchBar.text?.count == 0 {
-//
-//                loadItems()
-//
-//
-//                DispatchQueue.main.async {
-//                    searchBar.resignFirstResponder()
-//                }
-//
-//            }
-//
-//
-//
-//
-//    }
-//
-//
-//
-//
-//}
+
+
+
+
+
+        //tableView.reloadData()
+
+        func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String){
+
+            if searchBar.text?.count == 0 {
+
+                loadItems()
+
+
+                DispatchQueue.main.async {
+                    searchBar.resignFirstResponder()
+                }
+
+            }
+
+
+
+
+    }
+
+
+
+
+}
 
 
 
