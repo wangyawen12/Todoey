@@ -10,24 +10,28 @@ import UIKit
 
 import RealmSwift
 
-class CategoryViewController: UITableViewController {
+import ChameleonFramework
+
+
+
+class CategoryViewController: SwipeTableViewController {
 
     let realm = try! Realm()
     
     var categories: Results<Category>?
     
    
-   
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+       
         
 //        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
 //
 
         loadCategories()
-
+        tableView.separatorStyle = .none
         
     }
 
@@ -44,19 +48,54 @@ class CategoryViewController: UITableViewController {
     }
     
     
+
+    
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //print("call for ROWatindexpath called")
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
-       
+        if let category = categories?[indexPath.row]{
+            
+            cell.textLabel?.text = category.name
+            
+            
+//
+//            cell.backgroundColor = UIColor(hexString: category.color)
+//
+//            cell.textLabel?.textColor = ContrastColorOf(UIColor(hexString: category.color)!, returnFlat: true)
+            
+            guard let categoryColor = UIColor(hexString: category.color) else{fatalError()}
+            
+            cell.backgroundColor = categoryColor
+            cell.textLabel?.textColor = ContrastColorOf(categoryColor,returnFlat: true)
         
-        cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories added yet"
         
+        }
+        
+        
+        
+        
+        
+        
+        
+//        cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories added yet"
+//
+//        cell.backgroundColor = UIColor(hexString:(categories![indexPath.row].color ?? "007AFF") )
+//        cell.textLabel?.textColor = ContrastColorOf(<#T##backgroundColor: UIColor##UIColor#>, returnFlat: <#T##Bool#>)
+        //cell.backgroundColor  = UIColor.hexValue(UIColor)
+        
+        //print(cell.backgroundColor!)
         
         return cell
         
     }
+    
+    
+   
+    
+    
     
     
     
@@ -119,7 +158,7 @@ class CategoryViewController: UITableViewController {
             newCategory.name = textField.text!
            // newItem.done = false
             
-           
+           newCategory.color = UIColor.randomFlat.hexValue()
             
             self.save(category: newCategory)
             
@@ -136,6 +175,38 @@ class CategoryViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
         
     }
+    
+    
+    
+    //MARK: - Delete Dta From Swipe
+    
+    override func updateModel(at indexPath: IndexPath) {
+        
+        super.updateModel(at: indexPath)
+        
+        if let categoryForDeletion = self.categories?[indexPath.row]{
+            
+            do{
+                try self.realm.write {
+                    self.realm.delete(categoryForDeletion)
+                }
+                
+            }catch{
+                print("Error deleting category,\(error)")
+            }
+            
+   
+            
+        }
+        
+  
+        
+        
+    }
+    
+    
+    
+    
     
     //MARK: - TableView Delegate Methods
     
@@ -160,3 +231,10 @@ class CategoryViewController: UITableViewController {
     
     
 }
+
+
+
+
+
+
+
